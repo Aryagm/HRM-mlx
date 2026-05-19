@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hrm-mlx"
+version = "0.1.0"
+description = "Apple MLX optimized inference for HRM-Text"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mlx>=0.31.0",
+    "numpy",
+    "safetensors",
+    "transformers",
+]
+
+[project.optional-dependencies]
+charts = ["matplotlib"]
+video = ["opencv-python", "pillow"]
+dev = ["matplotlib", "opencv-python", "pillow"]
+
+[project.scripts]
+hrm-mlx = "mlx_hrm_text.generate:main"
+hrm-mlx-bench = "mlx_hrm_text.benchmark:main"
+hrm-mlx-profile = "mlx_hrm_text.profile_decode:main"
+hrm-mlx-quantize = "conversion.quantize_mlx:main"
+hrm-mlx-convert = "conversion.convert_to_mlx:main"
+
+[tool.setuptools.packages.find]
+include = ["mlx_hrm_text*", "conversion*", "benchmarks*"]

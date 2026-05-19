@@ -1,0 +1,5 @@
+{
+  "name": "HRM-mlx",
+  "tps": 55.96,
+  "text": "Start by testing the stated equation for consistency.\n\nFor all real x and y,\nf(x) + f(y) = f(x + y - xy).\n\nPut x = 1. The argument on the right becomes\n1 + y - 1*y = 1.\n\nThus\nf(1) + f(y) = f(1).\n\nSince the problem also states f(1) = 1, we get\n1 + f(y) = 1,\nhence f(y) = 0 for every real y.\n\nThis forces f(1) = 0, directly contradicting f(1) = 1. So the hypotheses cannot all be true; there is no valid function to evaluate at integers.\n\nFinal answer: no such function exists."
+}

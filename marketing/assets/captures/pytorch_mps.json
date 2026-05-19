@@ -1,0 +1,5 @@
+{
+  "name": "PyTorch MPS",
+  "tps": 21.99,
+  "text": "To solve f(x) + f(y) = f(x + y - xy) with f(1) = 1, first check whether the assumptions are consistent.\n\nSet x = 1. Then\nf(1) + f(y) = f(1 + y - y) = f(1).\n\nUsing f(1) = 1, this becomes\n1 + f(y) = 1,\nso f(y) = 0 for every real y.\n\nBut taking y = 1 gives f(1) = 0, contradicting the condition f(1) = 1. Equivalently, setting x = y = 1 gives 1 + 1 = f(1), i.e. 2 = 1.\n\nTherefore the given conditions are inconsistent. There is no function f satisfying the statement, so the requested integer set is not well-defined.\n\nFinal answer: no such function exists."
+}

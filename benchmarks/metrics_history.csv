@@ -1,0 +1,6 @@
+runtime,dtype,mode,prompt_tokens,decode_tokens,prefill_tok_s,decode_tok_s,model_dir,device
+PyTorch CPU,float32,baseline,512,128,255.81,5.15,exports/hrm-text-1b-hf,Apple M4 Max
+PyTorch MPS,bfloat16,baseline,512,128,916.95,21.99,exports/hrm-text-1b-hf,Apple M4 Max
+MLX,bfloat16,baseline,512,128,1225.09,24.74,exports/hrm-text-1b-hf,Apple M4 Max
+MLX,bfloat16,4bit affine g64,512,128,1039.97,38.45,exports/hrm-text-1b-mlx-4bit,Apple M4 Max
+MLX,bfloat16,mxfp4 + metal_swiglu,512,128,1129.20,55.96,exports/hrm-text-1b-mlx-mxfp4,Apple M4 Max
