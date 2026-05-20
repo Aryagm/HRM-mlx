@@ -14,12 +14,6 @@ ROOT = Path(__file__).resolve().parent.parent
 HISTORY = ROOT / "benchmarks" / "metrics_history.csv"
 OUTPUT = ROOT / "assets" / "benchmark-chart.png"
 
-COLORS = {
-    "PyTorch MPS BF16": "#454b68",
-    "HRM-mlx BF16": "#5f8ff0",
-    "HRM-mlx 4-bit": "#54d57a",
-}
-
 
 def load_entries() -> list[tuple[str, float, str]]:
     entries: list[tuple[str, float, str]] = []
@@ -38,7 +32,8 @@ def load_entries() -> list[tuple[str, float, str]]:
             else:
                 continue
 
-            entries.append((label, decode_tok_s, COLORS[label]))
+            color = "#5f8ff0" if label == "HRM-mlx 4-bit" else "#454b68"
+            entries.append((label, decode_tok_s, color))
 
     return sorted(entries, key=lambda entry: entry[1], reverse=True)
 
@@ -58,12 +53,12 @@ mpl.rcParams.update({
 })
 
 fig, ax = plt.subplots(figsize=(8.2, 4.2))
-fig.subplots_adjust(left=0.30, right=0.90, top=0.83, bottom=0.08)
+fig.subplots_adjust(left=0.28, right=0.90, top=0.83, bottom=0.08)
 
 bars = ax.barh(range(len(entries)), values, height=0.54, color=colors, edgecolor="none")
 
-for bar, label, val in zip(bars, labels, values):
-    is_ours = label.startswith("HRM-mlx")
+for i, (bar, val) in enumerate(zip(bars, values)):
+    is_ours = labels[i] == "HRM-mlx 4-bit"
     ax.text(
         val + 1.0,
         bar.get_y() + bar.get_height() / 2,
@@ -78,12 +73,12 @@ for bar, label, val in zip(bars, labels, values):
 ax.set_yticks(range(len(entries)))
 tick_labels = ax.set_yticklabels(labels, fontsize=10.0, color="#c0c8d4")
 for tick, label in zip(tick_labels, labels):
-    if label.startswith("HRM-mlx"):
+    if label == "HRM-mlx 4-bit":
         tick.set_color("#ffffff")
         tick.set_fontweight("bold")
 
 ax.invert_yaxis()
-ax.set_xlim(0, max(values) * 1.24)
+ax.set_xlim(0, 60)
 ax.xaxis.set_visible(False)
 ax.spines[:].set_visible(False)
 ax.tick_params(left=False, bottom=False)
