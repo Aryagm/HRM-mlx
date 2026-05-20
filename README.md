@@ -133,7 +133,7 @@ Marketing assets are reproducible: the chart comes from `benchmarks/metrics_hist
 
 ## Thanks
 
-Thanks to the Sapient team for releasing
+This is based on the incredible work by the Sapient team on
 [HRM-Text](https://github.com/sapientinc/HRM-Text).
 
 ## License
