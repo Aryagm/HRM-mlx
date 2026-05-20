@@ -1,16 +1,14 @@
-
-
-https://github.com/user-attachments/assets/48ac11cd-4e32-4479-b7c4-674f810682e3
-
 # HRM-mlx
 
-Apple Silicon inference for **HRM-Text-1B**. Native MLX, hosted 4-bit weights, and small Metal fusions for faster single-response decoding.
+**Apple Silicon inference for HRM-Text-1B.**
 
 [![Hugging Face weights](https://img.shields.io/badge/Hugging%20Face-4--bit%20MLX%20weights-ffcc00)](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit)
 
-![Benchmarks](assets/benchmark-chart.png)
+![Benchmarks](assets/benchmark-chart.png?raw=1)
 
 https://github.com/user-attachments/assets/2374403f-2926-411b-bf4a-c229afa27ba9
+
+Native MLX runtime, hosted 4-bit weights, and small Metal fusions for faster single-response decoding.
 
 HRM-Text-1B on MacBook Pro M4 Max, 32-core GPU:
 
@@ -111,7 +109,7 @@ python -m benchmarks.compare_quantized_decode --bf16-model-dir exports/hrm-text-
 
 HRM-Text-1B is a base reasoning model, not a polished chat assistant. The 4-bit checkpoint matched BF16 on a small qualitative math/reasoning check, but it has not been run through a formal eval suite. Quantization can also change answer length and style because small logit-rank flips early in greedy decoding send the model down a different response path.
 
-Marketing assets are reproducible: the chart comes from `benchmarks/metrics_history.csv`, and the demo video animates the same verified transcript at measured speeds from `marketing/assets/captures`.
+Marketing assets are reproducible: the chart comes from `benchmarks/metrics_history.csv`, and the demo video animates actual generated captures from `marketing/assets/captures` at measured speeds.
 
 ## License
 
