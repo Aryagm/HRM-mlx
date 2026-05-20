@@ -6,7 +6,8 @@
 
 ![Benchmarks](assets/benchmark-chart-v2.png)
 
-https://github.com/user-attachments/assets/509160d6-2086-480c-b51a-8c5bba27c236
+
+https://github.com/user-attachments/assets/4c5f4ff3-599c-409b-bedf-12ac6127a552
 
 Native MLX runtime, hosted 4-bit weights, and small Metal fusions for faster single-response decoding.
 
