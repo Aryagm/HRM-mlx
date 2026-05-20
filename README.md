@@ -2,6 +2,8 @@
 
 Apple Silicon inference for **HRM-Text-1B**. Native MLX, 4-bit checkpoints, and small Metal fusions for single-response speed.
 
+[Hosted 4-bit checkpoint](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit)
+
 ![Benchmarks](assets/benchmark-chart.png)
 
 ![Reasoning demo](assets/reasoning-demo.png)
@@ -46,17 +48,20 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-Download the public HRM-Text-1B files:
+Download the hosted 4-bit MLX checkpoint:
 
 ```bash
-mkdir -p exports/hrm-text-1b-hf
-curl -L -o exports/hrm-text-1b-hf/config.json https://huggingface.co/sapientinc/HRM-Text-1B/resolve/main/config.json
-curl -L -o exports/hrm-text-1b-hf/tokenizer.json https://huggingface.co/sapientinc/HRM-Text-1B/resolve/main/tokenizer.json
-curl -L -o exports/hrm-text-1b-hf/tokenizer_config.json https://huggingface.co/sapientinc/HRM-Text-1B/resolve/main/tokenizer_config.json
-curl -L -o exports/hrm-text-1b-hf/model.safetensors https://huggingface.co/sapientinc/HRM-Text-1B/resolve/main/model.safetensors
+python - <<'PY'
+from huggingface_hub import snapshot_download
+
+snapshot_download(
+    repo_id="Aryagm/HRM-Text-1B-MLX-4bit",
+    local_dir="exports/hrm-text-1b-mlx-mxfp4",
+)
+PY
 ```
 
-Persist the fast MLX checkpoint:
+Or build the 4-bit checkpoint locally from the original HRM-Text-1B weights:
 
 ```bash
 hrm-mlx-quantize \
