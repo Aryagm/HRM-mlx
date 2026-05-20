@@ -13,8 +13,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CAPTURE_DIR = ROOT / "marketing" / "assets" / "captures"
 PROMPT_TEXT = (
-    "Differentiate f(x) = x^2 / ln(x). Show the quotient-rule steps, simplify, "
-    "and put the final derivative in \\boxed{}."
+    "Differentiate f(x) = x^2 / ln(x). Write a detailed solution with quotient-rule "
+    "setup, derivative substitution, simplification, a product-rule cross-check, "
+    "and a domain note. Put the final derivative in \\boxed{}."
 )
 HRM_PROMPT = f"<|im_start|><|quad_end|><|object_ref_end|>{PROMPT_TEXT}<|im_end|>"
 FINAL_RE = re.compile(r"(final answer|### final|\\boxed|boxed\{)", re.IGNORECASE)
@@ -22,7 +23,7 @@ FINAL_RE = re.compile(r"(final answer|### final|\\boxed|boxed\{)", re.IGNORECASE
 
 def looks_complete(text: str) -> bool:
     stripped = text.strip()
-    if len(stripped) < 120 or FINAL_RE.search(stripped) is None:
+    if len(stripped) < 900 or FINAL_RE.search(stripped) is None:
         return False
     return stripped.endswith((".", "!", "?", "}", "]"))
 
