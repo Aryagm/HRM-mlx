@@ -1,5 +1,5 @@
 {
-  "name": "PyTorch MPS",
-  "tps": 21.99,
+  "name": "HRM-mlx BF16",
+  "tps": 28.21,
   "text": "To differentiate \\( f(x) = \\frac{x^2}{\\ln(x)} \\), use the quotient rule and then verify the result with the product rule.\n\nFirst set\n\\[\nu(x)=x^2, \\qquad v(x)=\\ln(x).\n\\]\nThen\n\\[\nu'(x)=2x, \\qquad v'(x)=\\frac{1}{x}.\n\\]\n\nThe quotient rule gives\n\\[\nf'(x)=\\frac{u'(x)v(x)-u(x)v'(x)}{v(x)^2}.\n\\]\nSubstitute the pieces:\n\\[\nf'(x)=\\frac{(2x)\\ln(x)-x^2\\left(\\frac{1}{x}\\right)}{(\\ln(x))^2}.\n\\]\nSimplify the numerator:\n\\[\n(2x)\\ln(x)-x^2\\left(\\frac{1}{x}\\right)=2x\\ln(x)-x.\n\\]\nFactor out \\(x\\):\n\\[\n2x\\ln(x)-x=x(2\\ln(x)-1).\n\\]\nSo the derivative is\n\\[\nf'(x)=\\frac{x(2\\ln(x)-1)}{(\\ln(x))^2}.\n\\]\n\nAs a cross-check, rewrite the original function as\n\\[\nf(x)=x^2(\\ln(x))^{-1}.\n\\]\nUsing the product rule,\n\\[\nf'(x)=2x(\\ln(x))^{-1}+x^2\\left(-\\frac{1}{x(\\ln(x))^2}\\right).\n\\]\nThat becomes\n\\[\nf'(x)=\\frac{2x}{\\ln(x)}-\\frac{x}{(\\ln(x))^2}\n=\\frac{2x\\ln(x)-x}{(\\ln(x))^2}\n=\\frac{x(2\\ln(x)-1)}{(\\ln(x))^2}.\n\\]\n\nThe original function is defined for \\(x>0\\) and \\(x\\ne 1\\), since \\(\\ln(x)\\) must exist and cannot be zero.\n\nFinal answer:\n\\[\n\\boxed{\\frac{x(2\\ln(x)-1)}{(\\ln(x))^2}}\n\\]"
 }

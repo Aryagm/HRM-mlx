@@ -15,11 +15,9 @@ HISTORY = ROOT / "benchmarks" / "metrics_history.csv"
 OUTPUT = ROOT / "assets" / "benchmark-chart.png"
 
 COLORS = {
-    "PyTorch CPU": "#454b68",
-    "PyTorch MPS": "#454b68",
-    "MLX baseline": "#454b68",
-    "MLX 4-bit": "#3f6fb5",
-    "HRM-mlx fast path": "#5f8ff0",
+    "PyTorch MPS BF16": "#454b68",
+    "HRM-mlx BF16": "#5f8ff0",
+    "HRM-mlx 4-bit": "#54d57a",
 }
 
 
@@ -32,26 +30,15 @@ def load_entries() -> list[tuple[str, float, str]]:
             decode_tok_s = float(row["decode_tok_s"])
 
             if "mxfp4" in mode:
-                label = "HRM-mlx fast path"
-            elif mode.startswith("4bit"):
-                label = "MLX 4-bit"
-            elif runtime == "MLX":
-                label = "MLX BF16"
+                label = "HRM-mlx 4-bit"
+            elif runtime == "HRM-mlx":
+                label = "HRM-mlx BF16"
             elif runtime == "PyTorch MPS":
                 label = "PyTorch MPS BF16"
             else:
-                label = "PyTorch CPU FP32"
+                continue
 
-            color_key = (
-                "HRM-mlx fast path"
-                if label == "HRM-mlx fast path"
-                else "MLX 4-bit"
-                if label == "MLX 4-bit"
-                else "MLX baseline"
-                if label == "MLX BF16"
-                else runtime
-            )
-            entries.append((label, decode_tok_s, COLORS[color_key]))
+            entries.append((label, decode_tok_s, COLORS[label]))
 
     return sorted(entries, key=lambda entry: entry[1], reverse=True)
 
@@ -76,7 +63,7 @@ fig.subplots_adjust(left=0.30, right=0.90, top=0.83, bottom=0.08)
 bars = ax.barh(range(len(entries)), values, height=0.54, color=colors, edgecolor="none")
 
 for bar, label, val in zip(bars, labels, values):
-    is_ours = label == "HRM-mlx fast path"
+    is_ours = label.startswith("HRM-mlx")
     ax.text(
         val + 1.0,
         bar.get_y() + bar.get_height() / 2,
@@ -91,7 +78,7 @@ for bar, label, val in zip(bars, labels, values):
 ax.set_yticks(range(len(entries)))
 tick_labels = ax.set_yticklabels(labels, fontsize=10.0, color="#c0c8d4")
 for tick, label in zip(tick_labels, labels):
-    if label == "HRM-mlx fast path":
+    if label.startswith("HRM-mlx"):
         tick.set_color("#ffffff")
         tick.set_fontweight("bold")
 

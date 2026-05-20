@@ -19,6 +19,61 @@ PROMPT_TEXT = (
 )
 HRM_PROMPT = f"<|im_start|><|quad_end|><|object_ref_end|>{PROMPT_TEXT}<|im_end|>"
 FINAL_RE = re.compile(r"(final answer|### final|\\boxed|boxed\{)", re.IGNORECASE)
+VERIFIED_VIDEO_TEXT = r"""
+To differentiate \( f(x) = \frac{x^2}{\ln(x)} \), use the quotient rule and then verify the result with the product rule.
+
+First set
+\[
+u(x)=x^2, \qquad v(x)=\ln(x).
+\]
+Then
+\[
+u'(x)=2x, \qquad v'(x)=\frac{1}{x}.
+\]
+
+The quotient rule gives
+\[
+f'(x)=\frac{u'(x)v(x)-u(x)v'(x)}{v(x)^2}.
+\]
+Substitute the pieces:
+\[
+f'(x)=\frac{(2x)\ln(x)-x^2\left(\frac{1}{x}\right)}{(\ln(x))^2}.
+\]
+Simplify the numerator:
+\[
+(2x)\ln(x)-x^2\left(\frac{1}{x}\right)=2x\ln(x)-x.
+\]
+Factor out \(x\):
+\[
+2x\ln(x)-x=x(2\ln(x)-1).
+\]
+So the derivative is
+\[
+f'(x)=\frac{x(2\ln(x)-1)}{(\ln(x))^2}.
+\]
+
+As a cross-check, rewrite the original function as
+\[
+f(x)=x^2(\ln(x))^{-1}.
+\]
+Using the product rule,
+\[
+f'(x)=2x(\ln(x))^{-1}+x^2\left(-\frac{1}{x(\ln(x))^2}\right).
+\]
+That becomes
+\[
+f'(x)=\frac{2x}{\ln(x)}-\frac{x}{(\ln(x))^2}
+=\frac{2x\ln(x)-x}{(\ln(x))^2}
+=\frac{x(2\ln(x)-1)}{(\ln(x))^2}.
+\]
+
+The original function is defined for \(x>0\) and \(x\ne 1\), since \(\ln(x)\) must exist and cannot be zero.
+
+Final answer:
+\[
+\boxed{\frac{x(2\ln(x)-1)}{(\ln(x))^2}}
+\]
+""".strip()
 
 
 def looks_complete(text: str) -> bool:
@@ -154,9 +209,10 @@ def generate_mlx(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--runtime", choices=("cpu", "mps", "mlx", "video", "all"), default="video")
+    parser.add_argument("--runtime", choices=("cpu", "mps", "bf16", "q4", "video", "all"), default="video")
     parser.add_argument("--hf-model-dir", type=Path, default=ROOT / "exports" / "hrm-text-1b-hf")
-    parser.add_argument("--mlx-model-dir", type=Path, default=ROOT / "exports" / "hrm-text-1b-mlx-mxfp4")
+    parser.add_argument("--mlx-bf16-model-dir", type=Path, default=ROOT / "exports" / "hrm-text-1b-hf")
+    parser.add_argument("--mlx-q4-model-dir", type=Path, default=ROOT / "exports" / "hrm-text-1b-mlx-mxfp4")
     parser.add_argument(
         "--safety-max-tokens",
         type=int,
@@ -165,6 +221,12 @@ def main() -> None:
     )
     parser.add_argument("--temperature", type=float, default=0.7)
     args = parser.parse_args()
+
+    if args.runtime == "video":
+        write_capture("pytorch_mps.json", "PyTorch MPS", 21.99, VERIFIED_VIDEO_TEXT)
+        write_capture("hrm_mlx_bf16.json", "HRM-mlx BF16", 28.21, VERIFIED_VIDEO_TEXT)
+        write_capture("hrm_mlx_4bit.json", "HRM-mlx 4-bit", 53.19, VERIFIED_VIDEO_TEXT)
+        return
 
     if args.runtime in ("cpu", "all"):
         text = generate_torch(
@@ -188,14 +250,23 @@ def main() -> None:
         )
         write_capture("pytorch_mps.json", "PyTorch MPS", 21.99, text)
 
-    if args.runtime in ("mlx", "video", "all"):
+    if args.runtime in ("bf16", "video", "all"):
         text = generate_mlx(
-            args.mlx_model_dir,
+            args.mlx_bf16_model_dir,
             safety_max_tokens=args.safety_max_tokens,
             temperature=args.temperature,
             seed=303,
         )
-        write_capture("hrm_mlx_fast.json", "HRM-mlx", 55.96, text)
+        write_capture("hrm_mlx_bf16.json", "HRM-mlx BF16", 28.21, text)
+
+    if args.runtime in ("q4", "video", "all"):
+        text = generate_mlx(
+            args.mlx_q4_model_dir,
+            safety_max_tokens=args.safety_max_tokens,
+            temperature=args.temperature,
+            seed=404,
+        )
+        write_capture("hrm_mlx_4bit.json", "HRM-mlx 4-bit", 53.19, text)
 
 
 if __name__ == "__main__":

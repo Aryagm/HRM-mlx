@@ -52,40 +52,40 @@ def load_capture(filename: str) -> tuple[str, float]:
     return data["text"], float(data["tps"])
 
 
-cpu_text, cpu_tps = load_capture("pytorch_cpu.json")
 mps_text, mps_tps = load_capture("pytorch_mps.json")
-hrm_text, hrm_tps = load_capture("hrm_mlx_fast.json")
+bf16_text, bf16_tps = load_capture("hrm_mlx_bf16.json")
+q4_text, q4_tps = load_capture("hrm_mlx_4bit.json")
 
 FRAMEWORKS = [
     {
-        "name": "PyTorch CPU",
-        "tps": cpu_tps,
-        "speed_color": RED,
-        "text": cpu_text,
-        "model_label": "HRM-Text-1B · FP32",
-        "header_color": (60, 30, 30),
-        "header_border": (120, 50, 50),
-        "tag": None,
-    },
-    {
-        "name": "PyTorch MPS",
+        "name": "PyTorch MPS BF16",
         "tps": mps_tps,
         "speed_color": YELLOW,
         "text": mps_text,
-        "model_label": "HRM-Text-1B · BF16",
+        "model_label": "HRM-Text-1B · bfloat16",
         "header_color": (50, 45, 20),
         "header_border": (100, 90, 30),
         "tag": None,
     },
     {
-        "name": "HRM-mlx",
-        "tps": hrm_tps,
+        "name": "HRM-mlx BF16",
+        "tps": bf16_tps,
+        "speed_color": BLUE,
+        "text": bf16_text,
+        "model_label": "BF16 + Metal fast path",
+        "header_color": (25, 40, 65),
+        "header_border": (70, 110, 180),
+        "tag": f"{bf16_tps / mps_tps:.1f}x VS MPS",
+    },
+    {
+        "name": "HRM-mlx 4-bit",
+        "tps": q4_tps,
         "speed_color": GREEN,
-        "text": hrm_text,
+        "text": q4_text,
         "model_label": "MXFP4 + Metal SwiGLU",
         "header_color": (25, 50, 35),
         "header_border": (50, 120, 70),
-        "tag": f"{hrm_tps / cpu_tps:.1f}x VS CPU",
+        "tag": f"{q4_tps / mps_tps:.1f}x VS MPS",
     },
 ]
 

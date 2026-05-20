@@ -12,13 +12,11 @@ Apple Silicon inference for **HRM-Text-1B**. Native MLX, hosted 4-bit weights, a
 
 HRM-Text-1B on MacBook Pro M4 Max, 32-core GPU:
 
-| Runtime | tok/s | vs CPU |
+| Runtime | tok/s | vs MPS |
 |---|---:|---:|
-| PyTorch CPU FP32 | 5.2 | 1.0x |
-| PyTorch MPS BF16 | 22.0 | 4.3x |
-| MLX BF16 | 24.7 | 4.8x |
-| MLX 4-bit | 38.5 | 7.5x |
-| **HRM-mlx fast path** | **56.0** | **10.9x** |
+| PyTorch MPS BF16 | 22.0 | 1.0x |
+| HRM-mlx BF16 | 28.2 | 1.3x |
+| **HRM-mlx 4-bit** | **53.2** | **2.4x** |
 
 > Benchmark shape: 512 prompt tokens, 128 generated tokens. Absolute numbers vary by chip; single-stream decode speed is the useful comparison.
 
@@ -89,7 +87,7 @@ MLX does not ship an HRM-Text runtime. This repo adds the pieces needed to make 
 - **MLX fast paths** for RMSNorm, RoPE, and scaled dot-product attention
 - **Persisted MXFP4 weights** so startup does not re-quantize the full model
 - **Custom Metal SwiGLU activation** for a small decode win on top of the larger MLX/quantized path
-- **Profiling and comparison tools** for MLX, PyTorch MPS, and CPU baselines
+- **Profiling and comparison tools** for HRM-mlx and PyTorch MPS baselines
 
 ## Useful commands
 
@@ -111,7 +109,7 @@ python -m benchmarks.compare_quantized_decode --bf16-model-dir exports/hrm-text-
 
 HRM-Text-1B is a base reasoning model, not a polished chat assistant. The 4-bit checkpoint matched BF16 on a small qualitative math/reasoning check, but it has not been run through a formal eval suite. Quantization can also change answer length and style because small logit-rank flips early in greedy decoding send the model down a different response path.
 
-Marketing assets are reproducible: the chart comes from `benchmarks/metrics_history.csv`, and the demo video is rendered from verified transcripts in `marketing/assets/captures`.
+Marketing assets are reproducible: the chart comes from `benchmarks/metrics_history.csv`, and the demo video animates the same verified transcript at measured speeds from `marketing/assets/captures`.
 
 ## License
 
