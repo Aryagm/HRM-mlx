@@ -131,6 +131,12 @@ HRM-Text-1B is a base reasoning model, not a polished chat assistant. The 4-bit 
 
 Marketing assets are reproducible: the chart comes from `benchmarks/metrics_history.csv`, and the demo video animates actual generated captures from `marketing/assets/captures` at measured speeds.
 
+## Thanks
+
+HRM-mlx builds on Sapient's HRM-Text release and the MLX ecosystem from Apple.
+Thanks to the Sapient team for releasing HRM-Text-1B and to the MLX maintainers
+for making Apple Silicon model hacking practical.
+
 ## License
 
 Apache-2.0, matching the upstream HRM-Text release.
