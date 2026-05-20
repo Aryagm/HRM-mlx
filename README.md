@@ -102,11 +102,14 @@ hrm-mlx-bench --model-dir exports/hrm-text-1b-mlx-mxfp4 --prompt-tokens 512 --de
 
 # Profile decode groups
 hrm-mlx-profile --model-dir exports/hrm-text-1b-mlx-mxfp4 --prompt-tokens 512 --decode-tokens 16 --dtype bfloat16 --metal-swiglu
+
+# Compare BF16 vs 4-bit greedy decode drift
+python -m benchmarks.compare_quantized_decode --bf16-model-dir exports/hrm-text-1b-hf --q4-model-dir exports/hrm-text-1b-mlx-mxfp4 --metal-swiglu
 ```
 
 ## Notes
 
-HRM-Text-1B is a base reasoning model, not a polished chat assistant. The 4-bit checkpoint matched BF16 on a small qualitative math/reasoning check, but it has not been run through a formal eval suite.
+HRM-Text-1B is a base reasoning model, not a polished chat assistant. The 4-bit checkpoint matched BF16 on a small qualitative math/reasoning check, but it has not been run through a formal eval suite. Quantization can also change answer length and style because small logit-rank flips early in greedy decoding send the model down a different response path.
 
 Marketing assets are reproducible: the chart comes from `benchmarks/metrics_history.csv`, and the demo video is rendered from verified transcripts in `marketing/assets/captures`.
 
