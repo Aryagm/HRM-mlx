@@ -129,8 +129,6 @@ python -m benchmarks.compare_quantized_decode --bf16-model-dir exports/hrm-text-
 
 HRM-Text-1B is a base reasoning model, not a polished chat assistant. The 4-bit checkpoint matched BF16 on a small qualitative math/reasoning check, but it has not been run through a formal eval suite. Quantization can also change answer length and style because small logit-rank flips early in greedy decoding send the model down a different response path.
 
-Marketing assets are reproducible: the chart comes from `benchmarks/metrics_history.csv`, and the demo video animates actual generated captures from `marketing/assets/captures` at measured speeds.
-
 ## Thanks
 
 This is based on the incredible work by the Sapient team on
