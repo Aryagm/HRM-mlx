@@ -80,6 +80,17 @@ H_cycles * (L_cycles + 1) = 2 * (3 + 1) = 8 stack passes/token
 
 This repo keeps the full recurrence and moves the inference path to MLX: packed HRM weight loading, recurrent KV caches, fast RMSNorm/RoPE/SDPA, persisted MXFP4 weights, and an optional Metal SwiGLU activation.
 
+## What we built
+
+MLX does not ship an HRM-Text runtime. This repo adds the pieces needed to make the model practical on Apple Silicon:
+
+- **Native recurrent decode** with separate H/L stacks and per-recurrence KV caches
+- **Packed checkpoint loading** for the published HRM-Text safetensors layout
+- **MLX fast paths** for RMSNorm, RoPE, and scaled dot-product attention
+- **Persisted MXFP4 weights** so startup does not re-quantize the full model
+- **Custom Metal SwiGLU activation** for a small decode win on top of the larger MLX/quantized path
+- **Profiling and comparison tools** for MLX, PyTorch MPS, and CPU baselines
+
 ## Useful commands
 
 ```bash
