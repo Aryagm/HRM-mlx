@@ -90,6 +90,21 @@ Expected final expression:
 x(2 ln(x) - 1) / (ln(x))^2
 ```
 
+Use it programmatically:
+
+```python
+from mlx_hrm_text import HRMTextGenerator
+
+# First run downloads the hosted 4-bit MLX checkpoint.
+runner = HRMTextGenerator()
+result = runner.generate("What is the derivative of (x^2) / ln(x)?", max_new_tokens=420)
+print(result.text)
+
+for event in runner.stream("Write a quicksort in Python.", max_new_tokens=128):
+    if not event.finished:
+        print(event.delta, end="", flush=True)
+```
+
 ## What We Built
 
 MLX does not ship an HRM-Text runtime. Everything below was implemented for this port:
