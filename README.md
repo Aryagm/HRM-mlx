@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/48ac11cd-4e32-4479-b7c4-674f810682e3
+
 # HRM-mlx
 
 Apple Silicon inference for **HRM-Text-1B**. Native MLX, hosted 4-bit weights, and small Metal fusions for faster single-response decoding.
@@ -6,9 +10,7 @@ Apple Silicon inference for **HRM-Text-1B**. Native MLX, hosted 4-bit weights, a
 
 ![Benchmarks](assets/benchmark-chart.png)
 
-![Reasoning demo](assets/reasoning-demo.png)
-
-[Demo comparison video](marketing/assets/demo-comparison.mp4)
+https://github.com/user-attachments/assets/2374403f-2926-411b-bf4a-c229afa27ba9
 
 HRM-Text-1B on MacBook Pro M4 Max, 32-core GPU:
 
