@@ -14,7 +14,9 @@ from mlx_hrm_text.generate import sample_next
 from mlx_hrm_text.model import HrmTextForCausalLM, set_metal_swiglu
 
 
-DEFAULT_MODEL_REPO = "Aryagm/HRM-Text-1B-MLX-4bit"
+Q4_MODEL_REPO = "Aryagm/HRM-Text-1B-MLX-4bit"
+BF16_MODEL_REPO = "Aryagm/HRM-Text-1B-MLX-BF16"
+DEFAULT_MODEL_REPO = Q4_MODEL_REPO
 PROMPT_PREFIX = "<|im_start|><|quad_end|><|object_ref_end|>"
 PROMPT_SUFFIX = "<|im_end|>"
 
@@ -44,8 +46,9 @@ class StreamEvent:
 class HRMTextGenerator:
     """Programmatic HRM-mlx generator.
 
-    If ``model_dir`` is omitted, the hosted 4-bit MLX checkpoint is downloaded
-    from Hugging Face on first use and reused from the local cache after that.
+    If ``model_dir`` is omitted, ``repo_id`` is downloaded from Hugging Face on
+    first use and reused from the local cache after that. The default ``repo_id``
+    is the hosted 4-bit MLX checkpoint. Pass ``BF16_MODEL_REPO`` for BF16.
     Plain prompts are wrapped in the prompt format used by HRM-Text.
     """
 

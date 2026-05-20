@@ -2,7 +2,8 @@
 
 **Apple Silicon inference for HRM-Text-1B.**
 
-[![Hugging Face weights](https://img.shields.io/badge/Hugging%20Face-4--bit%20MLX%20weights-ffcc00)](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit)
+[![HF 4-bit weights](https://img.shields.io/badge/Hugging%20Face-4--bit%20MLX%20weights-ffcc00)](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit)
+[![HF BF16 weights](https://img.shields.io/badge/Hugging%20Face-BF16%20MLX%20weights-ffcc00)](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-BF16)
 
 ![Benchmarks](assets/benchmark-chart-v2.png)
 
@@ -21,6 +22,13 @@ HRM-Text-1B on MacBook Pro M4 Max, 32-core GPU:
 
 > Benchmark shape: 512 prompt tokens, 128 generated tokens. Absolute numbers vary by chip; single-stream decode speed is the useful comparison.
 
+## Weights
+
+| Checkpoint | Download | Best for |
+|---|---:|---|
+| [`Aryagm/HRM-Text-1B-MLX-4bit`](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit) | 740 MB | fastest local decode; default |
+| [`Aryagm/HRM-Text-1B-MLX-BF16`](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-BF16) | 2.2 GB | unquantized BF16 baseline |
+
 ## Quick start
 
 ```bash
@@ -30,15 +38,23 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-Download the hosted 4-bit MLX checkpoint:
+Download a hosted MLX checkpoint:
 
 ```bash
-python - <<'PY'
+MODEL_REPO=Aryagm/HRM-Text-1B-MLX-4bit
+MODEL_DIR=exports/hrm-text-1b-mlx-mxfp4
+
+# Or use BF16:
+# MODEL_REPO=Aryagm/HRM-Text-1B-MLX-BF16
+# MODEL_DIR=exports/hrm-text-1b-mlx-bf16
+
+MODEL_REPO="$MODEL_REPO" MODEL_DIR="$MODEL_DIR" python - <<'PY'
+import os
 from huggingface_hub import snapshot_download
 
 snapshot_download(
-    repo_id="Aryagm/HRM-Text-1B-MLX-4bit",
-    local_dir="exports/hrm-text-1b-mlx-mxfp4",
+    repo_id=os.environ["MODEL_REPO"],
+    local_dir=os.environ["MODEL_DIR"],
 )
 PY
 ```
@@ -47,7 +63,7 @@ Generate:
 
 ```bash
 hrm-mlx \
-  --model-dir exports/hrm-text-1b-mlx-mxfp4 \
+  --model-dir "$MODEL_DIR" \
   --prompt '<|im_start|><|quad_end|><|object_ref_end|>What is the derivative of (x^2) / ln(x)? Give the final simplified expression.<|im_end|>' \
   --max-tokens 420 \
   --dtype bfloat16 \
@@ -57,12 +73,15 @@ hrm-mlx \
 ## Python API
 
 ```python
-from mlx_hrm_text import HRMTextGenerator
+from mlx_hrm_text import BF16_MODEL_REPO, HRMTextGenerator
 
-# First run downloads the hosted 4-bit MLX checkpoint.
+# Default: first run downloads the hosted 4-bit MLX checkpoint.
 runner = HRMTextGenerator()
 result = runner.generate("What is the derivative of (x^2) / ln(x)?", max_new_tokens=420)
 print(result.text)
+
+# Use the hosted BF16 checkpoint instead.
+bf16_runner = HRMTextGenerator(repo_id=BF16_MODEL_REPO)
 
 for event in runner.stream("Write a quicksort in Python.", max_new_tokens=128):
     if not event.finished:
