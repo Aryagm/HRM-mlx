@@ -1,0 +1,5 @@
+{
+  "name": "PyTorch CPU",
+  "tps": 5.15,
+  "text": "To differentiate \\( f(x) = \\frac{x^2}{\\ln(x)} \\), we apply the quotient rule:\n\n\\[\nf'(x) = \\frac{(2x)(\\ln(x)) - x^2 \\left( \\frac{1}{x} \\right)}{(\\ln(x))^2}\n\\]\n\nSimplify the numerator:\n\n\\[\nf'(x) = \\frac{2x \\ln(x) - x}{(\\ln(x))^2}\n\\]\n\nFactor out \\( x \\) from the numerator:\n\n\\[\nf'(x) = \\frac{x(2 \\ln(x) - 1)}{(\\ln(x))^2}\n\\]\n\nThus, the derivative is:\n\n\\[\n\\boxed{f'(x) = \\frac{x(2 \\ln(x) - 1)}{(\\ln(x))^2}}\n\\]"
+}

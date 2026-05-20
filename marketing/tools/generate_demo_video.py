@@ -40,10 +40,8 @@ FONT_SPEED = ImageFont.truetype(FONT_MONO, 76)
 FONT_TAG = ImageFont.truetype(FONT_MONO, 30)
 
 PROMPT_TEXT = (
-    "The function f satisfies the functional equation f(x) + f(y) = f(x + y - xy) "
-    "for all real numbers x and y. If f(1) = 1, then find all integers n "
-    "such that f(n) = n. Enter all your integers, separated by commas. "
-    "Please reason step by step, and put your final answer within boxed braces."
+    "Differentiate f(x) = x^2 / ln(x). Show the quotient-rule steps, simplify, "
+    "and put the final derivative in boxed braces."
 )
 
 
@@ -53,10 +51,21 @@ def load_capture(filename: str) -> tuple[str, float]:
     return data["text"], float(data["tps"])
 
 
+cpu_text, cpu_tps = load_capture("pytorch_cpu.json")
 mps_text, mps_tps = load_capture("pytorch_mps.json")
 hrm_text, hrm_tps = load_capture("hrm_mlx_fast.json")
 
 FRAMEWORKS = [
+    {
+        "name": "PyTorch CPU",
+        "tps": cpu_tps,
+        "speed_color": RED,
+        "text": cpu_text,
+        "model_label": "HRM-Text-1B · FP32",
+        "header_color": (60, 30, 30),
+        "header_border": (120, 50, 50),
+        "tag": None,
+    },
     {
         "name": "PyTorch MPS",
         "tps": mps_tps,
@@ -75,7 +84,7 @@ FRAMEWORKS = [
         "model_label": "MXFP4 + Metal SwiGLU",
         "header_color": (25, 50, 35),
         "header_border": (50, 120, 70),
-        "tag": f"{hrm_tps / mps_tps:.1f}x VS MPS",
+        "tag": f"{hrm_tps / cpu_tps:.1f}x VS CPU",
     },
 ]
 
@@ -246,12 +255,11 @@ def draw_frame(t: float) -> np.ndarray:
             cursor_y = min(text_y - 19, y + PANEL_H - 20)
             draw.rectangle([cursor_x, cursor_y, cursor_x + 9, cursor_y + 17], fill=TEXT_BRIGHT)
 
-        if finished:
-            continue
-
         speed_color = framework["speed_color"]
         tps_str = f"{tps:.1f} TOK/S"
         tag_text = framework["tag"]
+        if finished:
+            tag_text = f"DONE | {tag_text}" if tag_text else "DONE"
 
         tps_bbox = draw.textbbox((0, 0), tps_str, font=FONT_SPEED)
         tps_w = tps_bbox[2] - tps_bbox[0]
