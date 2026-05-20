@@ -2,7 +2,7 @@
 
 Apple Silicon inference for **HRM-Text-1B**. Native MLX, 4-bit checkpoints, and small Metal fusions for single-response speed.
 
-[Hosted 4-bit checkpoint](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit)
+[![Hugging Face weights](https://img.shields.io/badge/Hugging%20Face-4--bit%20MLX%20weights-ffcc00)](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit)
 
 ![Benchmarks](assets/benchmark-chart.png)
 
