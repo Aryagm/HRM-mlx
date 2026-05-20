@@ -105,7 +105,6 @@ MLX does not ship an HRM-Text runtime. This repo adds the pieces needed to make 
 - **Native recurrent decode** with separate H/L stacks and per-recurrence KV caches
 - **Packed checkpoint loading** for the published HRM-Text safetensors layout
 - **MLX fast paths** for RMSNorm, RoPE, and scaled dot-product attention
-- **Persisted MXFP4 weights** so startup does not re-quantize the full model
 - **Custom Metal SwiGLU activation** for a small decode win on top of the larger MLX/quantized path
 - **Profiling and comparison tools** for HRM-mlx and PyTorch MPS baselines
 
