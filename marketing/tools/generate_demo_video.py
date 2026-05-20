@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
 from pathlib import Path
 
 import cv2
@@ -13,6 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "assets" / "demo-comparison.mp4"
+TMP_OUTPUT = ROOT / "assets" / "demo-comparison.tmp.mp4"
 CAPTURE_DIR = ROOT / "assets" / "captures"
 FPS = 30
 WIDTH, HEIGHT = 1920, 1080
@@ -308,7 +311,7 @@ def draw_frame(t: float) -> np.ndarray:
 def main() -> None:
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     writer = cv2.VideoWriter(
-        str(OUTPUT),
+        str(TMP_OUTPUT),
         cv2.VideoWriter_fourcc(*"mp4v"),
         FPS,
         (WIDTH, HEIGHT),
@@ -325,6 +328,35 @@ def main() -> None:
         writer.write(final_frame)
 
     writer.release()
+    if shutil.which("ffmpeg"):
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-i",
+                str(TMP_OUTPUT),
+                "-c:v",
+                "libx264",
+                "-profile:v",
+                "high",
+                "-level",
+                "4.0",
+                "-pix_fmt",
+                "yuv420p",
+                "-movflags",
+                "+faststart",
+                "-preset",
+                "slow",
+                "-crf",
+                "18",
+                "-an",
+                str(OUTPUT),
+            ],
+            check=True,
+        )
+        TMP_OUTPUT.unlink()
+    else:
+        TMP_OUTPUT.replace(OUTPUT)
     print(f"Saved to {OUTPUT}")
 
 
