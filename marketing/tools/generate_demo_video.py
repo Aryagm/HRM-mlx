@@ -40,9 +40,9 @@ FONT_SPEED = ImageFont.truetype(FONT_MONO, 76)
 FONT_TAG = ImageFont.truetype(FONT_MONO, 30)
 
 PROMPT_TEXT = (
-    "Differentiate f(x) = x^2 / ln(x). Write a detailed solution with quotient-rule "
-    "setup, derivative substitution, simplification, a product-rule cross-check, "
-    "and a domain note. Put the final derivative in boxed braces."
+    "Differentiate f(x) = x^2 / ln(x). Let u=x^2 and v=ln(x), use "
+    "f'(x)=(u'v-uv')/v^2, substitute u'=2x and v'=1/x, simplify the numerator, "
+    "state the domain x>0 and x!=1, and put the final derivative in boxed braces."
 )
 
 

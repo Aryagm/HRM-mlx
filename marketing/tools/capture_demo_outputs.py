@@ -13,72 +13,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CAPTURE_DIR = ROOT / "marketing" / "assets" / "captures"
 PROMPT_TEXT = (
-    "Differentiate f(x) = x^2 / ln(x). Write a detailed solution with quotient-rule "
-    "setup, derivative substitution, simplification, a product-rule cross-check, "
-    "and a domain note. Put the final derivative in \\boxed{}."
+    "Differentiate f(x) = x^2 / ln(x). Let u=x^2 and v=ln(x), use "
+    "f'(x)=(u'v-uv')/v^2, substitute u'=2x and v'=1/x, simplify the numerator, "
+    "state the domain x>0 and x!=1, and put the final derivative in \\boxed{}."
 )
 HRM_PROMPT = f"<|im_start|><|quad_end|><|object_ref_end|>{PROMPT_TEXT}<|im_end|>"
 FINAL_RE = re.compile(r"(final answer|### final|\\boxed|boxed\{)", re.IGNORECASE)
-VERIFIED_VIDEO_TEXT = r"""
-To differentiate \( f(x) = \frac{x^2}{\ln(x)} \), use the quotient rule and then verify the result with the product rule.
-
-First set
-\[
-u(x)=x^2, \qquad v(x)=\ln(x).
-\]
-Then
-\[
-u'(x)=2x, \qquad v'(x)=\frac{1}{x}.
-\]
-
-The quotient rule gives
-\[
-f'(x)=\frac{u'(x)v(x)-u(x)v'(x)}{v(x)^2}.
-\]
-Substitute the pieces:
-\[
-f'(x)=\frac{(2x)\ln(x)-x^2\left(\frac{1}{x}\right)}{(\ln(x))^2}.
-\]
-Simplify the numerator:
-\[
-(2x)\ln(x)-x^2\left(\frac{1}{x}\right)=2x\ln(x)-x.
-\]
-Factor out \(x\):
-\[
-2x\ln(x)-x=x(2\ln(x)-1).
-\]
-So the derivative is
-\[
-f'(x)=\frac{x(2\ln(x)-1)}{(\ln(x))^2}.
-\]
-
-As a cross-check, rewrite the original function as
-\[
-f(x)=x^2(\ln(x))^{-1}.
-\]
-Using the product rule,
-\[
-f'(x)=2x(\ln(x))^{-1}+x^2\left(-\frac{1}{x(\ln(x))^2}\right).
-\]
-That becomes
-\[
-f'(x)=\frac{2x}{\ln(x)}-\frac{x}{(\ln(x))^2}
-=\frac{2x\ln(x)-x}{(\ln(x))^2}
-=\frac{x(2\ln(x)-1)}{(\ln(x))^2}.
-\]
-
-The original function is defined for \(x>0\) and \(x\ne 1\), since \(\ln(x)\) must exist and cannot be zero.
-
-Final answer:
-\[
-\boxed{\frac{x(2\ln(x)-1)}{(\ln(x))^2}}
-\]
-""".strip()
 
 
 def looks_complete(text: str) -> bool:
     stripped = text.strip()
-    if len(stripped) < 900 or FINAL_RE.search(stripped) is None:
+    if len(stripped) < 600 or FINAL_RE.search(stripped) is None:
         return False
     return stripped.endswith((".", "!", "?", "}", "]"))
 
@@ -172,7 +117,11 @@ def generate_mlx(
     seed: int,
 ) -> str:
     import mlx.core as mx
+    import transformers.utils.generic as transformers_generic
     from transformers import AutoTokenizer
+
+    if not hasattr(transformers_generic, "split_attention_implementation"):
+        transformers_generic.split_attention_implementation = lambda value: (None, value)
 
     sys.path.insert(0, str(ROOT))
     from mlx_hrm_text.generate import sample_next
@@ -221,12 +170,6 @@ def main() -> None:
     )
     parser.add_argument("--temperature", type=float, default=0.7)
     args = parser.parse_args()
-
-    if args.runtime == "video":
-        write_capture("pytorch_mps.json", "PyTorch MPS", 21.99, VERIFIED_VIDEO_TEXT)
-        write_capture("hrm_mlx_bf16.json", "HRM-mlx BF16", 28.21, VERIFIED_VIDEO_TEXT)
-        write_capture("hrm_mlx_4bit.json", "HRM-mlx 4-bit", 53.19, VERIFIED_VIDEO_TEXT)
-        return
 
     if args.runtime in ("cpu", "all"):
         text = generate_torch(
