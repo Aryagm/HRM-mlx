@@ -473,7 +473,6 @@ class HrmTextForCausalLM(nn.Module):
         if cache is None:
             cache = self.make_cache()
         logits = self(input_ids[None, :] if input_ids.ndim == 1 else input_ids, cache=cache)
-        mx.eval(logits)
         return logits[:, -1, :]
 
     def decode_one(self, input_ids: mx.array, position: int, cache: dict[str, list[list[KVCache]]]) -> mx.array:
@@ -483,5 +482,4 @@ class HrmTextForCausalLM(nn.Module):
             input_ids = input_ids[:, None]
         position_ids = mx.full(input_ids.shape, position, dtype=mx.int32)
         logits = self(input_ids, position_ids=position_ids, cache=cache)
-        mx.eval(logits)
         return logits[:, -1, :]
