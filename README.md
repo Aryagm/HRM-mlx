@@ -4,7 +4,7 @@
 
 [![Hugging Face weights](https://img.shields.io/badge/Hugging%20Face-4--bit%20MLX%20weights-ffcc00)](https://huggingface.co/Aryagm/HRM-Text-1B-MLX-4bit)
 
-![Benchmarks](assets/benchmark-chart.png?raw=1)
+![Benchmarks](assets/benchmark-chart-v2.png)
 
 https://github.com/user-attachments/assets/2374403f-2926-411b-bf4a-c229afa27ba9
 

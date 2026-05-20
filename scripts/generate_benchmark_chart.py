@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parent.parent
 HISTORY = ROOT / "benchmarks" / "metrics_history.csv"
-OUTPUT = ROOT / "assets" / "benchmark-chart.png"
+OUTPUT = ROOT / "assets" / "benchmark-chart-v2.png"
 
 
 def load_entries() -> list[tuple[str, float, str]]:
