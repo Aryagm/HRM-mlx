@@ -133,9 +133,8 @@ Marketing assets are reproducible: the chart comes from `benchmarks/metrics_hist
 
 ## Thanks
 
-HRM-mlx builds on Sapient's HRM-Text release and the MLX ecosystem from Apple.
-Thanks to the Sapient team for releasing HRM-Text-1B and to the MLX maintainers
-for making Apple Silicon model hacking practical.
+Thanks to the Sapient team for releasing
+[HRM-Text](https://github.com/sapientinc/HRM-Text).
 
 ## License
 
